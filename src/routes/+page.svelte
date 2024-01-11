@@ -1,13 +1,17 @@
 <script>
     import Logo from '../assets/logo.png';
-    import Wp from '../assets/wp.jpg';
+    import Wp from '../assets/Wp/wp.jpg';
+    import Xp from '../assets/Wp/xp.jpg';
+    import { onMount, afterUpdate } from 'svelte';
     function getCurrentTime() {
         var now = new Date();
         var hours = now.getHours();
         var minutes = now.getMinutes();
+        var secondes = now.getSeconds();
         hours = (hours < 10) ? "0" + hours : hours;
         minutes = (minutes < 10) ? "0" + minutes : minutes;
-        var currentTime = hours + ":" + minutes;
+        secondes = (secondes < 10) ? "0" + secondes : secondes;
+        var currentTime = hours + ":" + minutes + ":" + secondes;
         return currentTime;
     }
     var currentTime = getCurrentTime();
@@ -24,6 +28,27 @@
         return currentDate;
     }
     var currentDate = getCurrentDate();
+    function updateTime() {
+        currentTime = getCurrentTime();
+    }
+    let currentImage = Wp;
+    let images = [Wp, Xp];
+    let currentIndex = 0;
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        currentImage = images[currentIndex];
+    }
+
+    onMount(() => {
+        setInterval(updateTime, 1000);
+        setInterval(nextImage, 30000);
+    });
+    afterUpdate(() => {
+        document.querySelector('.RacWp').style.opacity = 0;
+        setTimeout(() => {
+        document.querySelector('.RacWp').style.opacity = 1;
+        }, 0);
+    });
 </script>
 
 <style>
@@ -31,10 +56,11 @@
      /* App */
     .App { height: 100vh; width: 100vw; background-color: var(--color-background) ; overflow: hidden; }
     /* Wallpaper */
-    .RacWp { position: absolute; height: 100vh; width: 100vw; object-fit: cover; object-position: center; }
+    .RacWp { position: absolute; height: 100vh; width: 100vw; object-fit: cover; object-position: center; transition: opacity 1s ease-in-out; }
     /* User interface area */
     .RacScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; position: absolute; height: 100vh; width: 100vw; }
     /* MenuBar */
+    .RacMenu > * { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.9rem; color: #000; }
     .RacMenu { height: 3vh ; width: 100vw; background-color: #fff; opacity: 0.5; display: flex; align-items: center; }
     .RacLogo { margin-left: 8px ; height: 100%; width: fit-content; display: flex; align-items: center; justify-content: center; }
     .RacLogoImg { height: 100%; width: auto;}
@@ -53,6 +79,7 @@
     .RacTimeTextDate { height: auto; width: fit-content; margin-right: 5px; }
     /* Contents */
     .RacWindow { height: 91vh; width: 100vw; }
+    .WindowTest { position: absolute; height: 70%; width: 60%; background-color: red; opacity: 0.5; backdrop-filter: blur(2px); visibility: hidden; }
     /* DockBar */
     @keyframes ZoomInDock { 0% { transform: scale(1); margin-bottom: 0; } 100% { transform: scale(1.33); margin-bottom: 1vh; }}
     @keyframes ZoomOutDock { 0% { transform: scale(1.33); margin-bottom: 1.15vh; } 50% { transform: scale(1.33); margin-bottom: 1.15vh; } 100% { transform: scale(1); margin-bottom: 0; }}
@@ -64,7 +91,7 @@
 </style>
 
 <div class="App">
-    <img src={Wp} alt="logo" class="RacWp" />
+    <img src={currentImage} alt="logo" class="RacWp" />
     <div class="RacScreen">
         <div class="RacMenu">
             <div class="RacLogo">
@@ -95,7 +122,7 @@
             </div>
         </div>
         <div class="RacWindow">
-
+            <div class="WindowTest"></div>
         </div>
         <div class="RacDock">
             <div class="FinderIcon"></div>
