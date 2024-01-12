@@ -1,5 +1,6 @@
 <script>
     import Logo from '../assets/logo.png';
+    import WLogo from '../assets/logoWhite.png';
     import Wp from '../assets/Wp/wp.jpg';
     import Xp from '../assets/Wp/xp.jpg';
     import { onMount, afterUpdate } from 'svelte';
@@ -41,7 +42,7 @@
 
     onMount(() => {
         setInterval(updateTime, 1000);
-        setInterval(nextImage, 30000);
+        setInterval(nextImage, 300000);
     });
     afterUpdate(() => {
         document.querySelector('.RacWp').style.opacity = 0;
@@ -49,10 +50,24 @@
         document.querySelector('.RacWp').style.opacity = 1;
         }, 0);
     });
+    let showConnection = 1;
+    onMount(() => {
+        setTimeout(() => {
+            showConnection = 0;
+            setTimeout(() => {
+                document.querySelector('.Connection').style.zIndex = '-999'; //-
+                document.querySelector('.ConnectionLogo').style.zIndex = '-999'; //-
+            }, 1000);
+        }, 1000);
+    });
 </script>
 
 <style>
      @import '../public/global.css';
+     /* Connection */
+    .Connection {  position: absolute; height: 100vh; width: 100vw; background-color: #000; z-index: 1000; transition: opacity 1s ease-in-out; display: flex; align-items: center; justify-content: center;}
+    @keyframes rotateAnimation { 0% { transform: rotate(0deg); } 100% { transform: rotate(1800deg); }}
+    .ConnectionLogo { height: 10vh; width: auto; z-index: 1000; animation-name: rotateAnimation; animation-duration: 1s; animation-timing-function: cubic-bezier(0.83, 0, 0.17, 1); animation-iteration-count: 1;  }
      /* App */
     .App { height: 100vh; width: 100vw; background-color: var(--color-background) ; overflow: hidden; }
     /* Wallpaper */
@@ -90,6 +105,9 @@
     .EndIcon { border-radius: 5px; margin: 0 4px; height: 5vh; width: 5vh; background-color:red; }
 </style>
 
+<div class="Connection" style="opacity: {showConnection};">
+    <img src={WLogo} alt="logo" class="ConnectionLogo"/>
+</div>
 <div class="App">
     <img src={currentImage} alt="logo" class="RacWp" />
     <div class="RacScreen">
