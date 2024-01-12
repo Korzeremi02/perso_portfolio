@@ -3,6 +3,7 @@
     import WLogo from '../assets/logoWhite.png';
     import Wp from '../assets/Wp/wp.jpg';
     import Xp from '../assets/Wp/xp.jpg';
+    import Min from '../assets/Wp/mac.jpg';
     import { onMount, afterUpdate } from 'svelte';
     function getCurrentTime() {
         var now = new Date();
@@ -32,8 +33,8 @@
     function updateTime() {
         currentTime = getCurrentTime();
     }
-    let currentImage = Wp;
-    let images = [Wp, Xp];
+    let currentImage = Min;
+    let images = [Min, Wp, Xp];
     let currentIndex = 0;
     function nextImage() {
         currentIndex = (currentIndex + 1) % images.length;
@@ -42,7 +43,7 @@
 
     onMount(() => {
         setInterval(updateTime, 1000);
-        setInterval(nextImage, 300000);
+        setInterval(nextImage, 10000);
     });
     afterUpdate(() => {
         document.querySelector('.RacWp').style.opacity = 0;
